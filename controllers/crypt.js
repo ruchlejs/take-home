@@ -1,11 +1,12 @@
 const crypto = require("crypto");
+const has = require("has-keys");
 
 let hmac_signature;
 
 module.exports = {
   async encrypt(req, res) {
     const body = req.body;
-    encrypted_json = {};
+    const encrypted_json = {};
 
     for (const parse_body_key in body) {
       if (typeof body[parse_body_key] === "object") {
@@ -26,7 +27,7 @@ module.exports = {
 
   decrypt(req, res) {
     const body = req.body;
-    decrypted_json = {};
+    const decrypted_json = {};
     for (parse_body_key in body) {
       try {
         decrypted_json[parse_body_key] = JSON.parse(
@@ -44,6 +45,7 @@ module.exports = {
   },
 
   sign(req, res) {
+    //normalement mit dans un fichier à part pour protéger le secret
     const key = "AAAA";
     const msg = JSON.stringify(req.body);
     hmac_signature = crypto
@@ -56,10 +58,16 @@ module.exports = {
 
   verify(req, res) {
     const body = req.body;
+    if (!has(req.body, ["signature"])) {
+      return res.status(400).json({
+        status: "error",
+        msg: "you should provide a signature field.",
+      });
+    }
     let given_sign = body.signature;
 
     if (given_sign === hmac_signature) {
-      res.status(204);
+      res.status(204).send();
     } else {
       res.status(400).json({ msg: "different signature" });
     }
