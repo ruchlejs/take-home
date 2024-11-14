@@ -7,6 +7,7 @@ router.get("/", (req, res) => {
 
 router.post("/encrypt", crypt.encrypt);
 router.post("/decrypt", crypt.decrypt);
-router.get("/sign", crypt.sign);
+router.post("/sign", crypt.sign);
+router.post("/verify", crypt.verify);
 
 module.exports = router;

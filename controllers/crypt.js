@@ -1,3 +1,7 @@
+const crypto = require("crypto");
+
+let hmac_signature;
+
 module.exports = {
   async encrypt(req, res) {
     const body = req.body;
@@ -39,5 +43,25 @@ module.exports = {
     res.status(200).json(decrypted_json);
   },
 
-  sign(req, res) {},
+  sign(req, res) {
+    const key = "AAAA";
+    const msg = JSON.stringify(req.body);
+    hmac_signature = crypto
+      .createHmac("sha256", key)
+      .update(msg)
+      .digest("base64");
+
+    res.status(200).json(hmac_signature);
+  },
+
+  verify(req, res) {
+    const body = req.body;
+    let given_sign = body.signature;
+
+    if (given_sign === hmac_signature) {
+      res.status(204);
+    } else {
+      res.status(400).json({ msg: "different signature" });
+    }
+  },
 };
