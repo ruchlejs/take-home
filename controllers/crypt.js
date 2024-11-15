@@ -4,7 +4,7 @@ const has = require("has-keys");
 let hmac_signature;
 
 module.exports = {
-  async encrypt(req, res) {
+  encrypt(req, res) {
     const body = req.body;
     const encrypted_json = {};
 
@@ -45,7 +45,8 @@ module.exports = {
   },
 
   sign(req, res) {
-    //normalement mit dans un fichier à part pour protéger le secret
+    // Normally, I would store this key in a .env file to keep it secure and out of the codebase.
+    // However, for debugging purposes, I'm temporarily keeping it here.
     const key = "AAAA";
     const msg = JSON.stringify(req.body);
     hmac_signature = crypto
@@ -60,7 +61,7 @@ module.exports = {
     const body = req.body;
     if (!has(req.body, ["signature"])) {
       return res.status(400).json({
-        status: "error",
+        status: false,
         msg: "you should provide a signature field.",
       });
     }
