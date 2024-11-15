@@ -1,5 +1,6 @@
 const app = require("./index.js");
 const request = require("supertest");
+const { generateHmac } = require("./util/hmac.js");
 
 describe("POST /encrypt", () => {
   test("test of encryption of JSON payload", async () => {
@@ -16,6 +17,29 @@ describe("POST /encrypt", () => {
 
     expect(response.body).toHaveProperty("foo");
     expect(response.body).toHaveProperty("bar");
+  });
+});
+
+describe("generatHmac", () => {
+  test("Test if for different key we get different result", () => {
+    const testKey = "testKey1";
+    const testKeyBis = "testKey2";
+
+    const testPayload = { test: "test" };
+    const firstSign = generateHmac(testPayload, testKey);
+    const secondSign = generateHmac(testPayload, testKeyBis);
+
+    expect(firstSign).not.toBe(secondSign);
+  });
+
+  test("Test if for for the same paylaod and key we get the same result", () => {
+    const testKey = "testKey";
+
+    const testPayload = { test: "test" };
+    const firstSign = generateHmac(testPayload, testKey);
+    const secondSign = generateHmac(testPayload, testKey);
+
+    expect(firstSign).toBe(secondSign);
   });
 });
 
