@@ -20,6 +20,21 @@ describe("POST /encrypt", () => {
   });
 });
 
+describe("POST /decrypt", () => {
+  test("test of decryption of JSON payload", async () => {
+    const response = await request(app).post("/decrypt").send({
+      foo: "Zm9vYmFy",
+      bar: "eyJpc0JhciI6dHJ1ZX0=",
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const decrypted = response.body;
+    expect(decrypted.foo).toBe("foobar");
+    expect(decrypted.bar).toEqual({ isBar: true });
+  });
+});
+
 describe("generatHmac", () => {
   test("Test if for different key we get different result", () => {
     const testKey = "testKey1";
@@ -40,21 +55,6 @@ describe("generatHmac", () => {
     const secondSign = generateHmac(testPayload, testKey);
 
     expect(firstSign).toBe(secondSign);
-  });
-});
-
-describe("POST /decrypt", () => {
-  test("test of decryption of JSON payload", async () => {
-    const response = await request(app).post("/decrypt").send({
-      foo: "Zm9vYmFy",
-      bar: "eyJpc0JhciI6dHJ1ZX0=",
-    });
-
-    expect(response.statusCode).toBe(200);
-
-    const decrypted = response.body;
-    expect(decrypted.foo).toBe("foobar");
-    expect(decrypted.bar).toEqual({ isBar: true });
   });
 });
 

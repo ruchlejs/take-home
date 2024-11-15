@@ -1,6 +1,8 @@
 const crypto = require("crypto");
 const has = require("has-keys");
 
+// Normally, I would store this key in a .env file to keep it secure and out of the codebase.
+// However, for debugging purposes, I'm temporarily keeping it here.
 const { generateHmac } = require("../util/hmac");
 const key = "AAAA";
 
@@ -46,8 +48,6 @@ module.exports = {
   },
 
   sign(req, res) {
-    // Normally, I would store this key in a .env file to keep it secure and out of the codebase.
-    // However, for debugging purposes, I'm temporarily keeping it here.
     const msg = JSON.stringify(req.body);
     const hmac_signature = generateHmac(msg, key);
 
