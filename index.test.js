@@ -62,11 +62,24 @@ describe("POST /verify", () => {
       expect(response.body.status).toBe(false);
     });
 
-  test("test of provided the same signature previously generated", async () => {
+  test("test of the necesity of the data key", async () => {
     const response = await request(app).post("/verify").send({
-      signature: "X55eFovc4SCLnVgdALVdOv6LjfAWycpt5IKuExTXJjs=",
-      data: {},
+      signature: "sign",
     });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.status).toBe(false);
+  });
+
+  test("test of provided the same signature previously generated", async () => {
+    const response = await request(app)
+      .post("/verify")
+      .send({
+        signature: "X55eFovc4SCLnVgdALVdOv6LjfAWycpt5IKuExTXJjs=",
+        data: {
+          test: "I am testing the signing",
+        },
+      });
 
     expect(response.statusCode).toBe(204);
   });

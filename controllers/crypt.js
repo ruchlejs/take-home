@@ -1,7 +1,8 @@
 const crypto = require("crypto");
 const has = require("has-keys");
 
-let hmac_signature;
+const { generateHmac } = require("../util/hmac");
+const key = "AAAA";
 
 module.exports = {
   encrypt(req, res) {
@@ -47,27 +48,25 @@ module.exports = {
   sign(req, res) {
     // Normally, I would store this key in a .env file to keep it secure and out of the codebase.
     // However, for debugging purposes, I'm temporarily keeping it here.
-    const key = "AAAA";
     const msg = JSON.stringify(req.body);
-    hmac_signature = crypto
-      .createHmac("sha256", key)
-      .update(msg)
-      .digest("base64");
+    const hmac_signature = generateHmac(msg, key);
 
     res.status(200).json(hmac_signature);
   },
 
   verify(req, res) {
     const body = req.body;
-    if (!has(req.body, ["signature"])) {
+    if (!has(req.body, ["signature", "data"])) {
       return res.status(400).json({
         status: false,
-        msg: "you should provide a signature field.",
+        msg: "you should provide a signature field and a data field.",
       });
     }
     let given_sign = body.signature;
 
-    if (given_sign === hmac_signature) {
+    const computed_sign = generateHmac(body.data, key);
+
+    if (given_sign === computed_sign) {
       res.status(204).send();
     } else {
       res.status(400).json({ msg: "different signature" });
