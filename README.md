@@ -64,23 +64,23 @@ I used the following modules to implement the solution:
 - nodemon
 - supertest
 
-you can install those by using this command:
+You can install those by using this command:
 
-```
+```bash
 npm install
 ```
 
 ## Execution
 
-you can start the server by using:
+You can start the server by using:
 
-```
+```bash
 npm run start
 ```
 
 If you want to start it in development mode, use:
 
-```
+```bash
 npm run dev
 ```
 
@@ -88,6 +88,6 @@ npm run dev
 
 Some tests have been included to verify the proper behavior of the program. You can run them with the following command:
 
-```
+```bash
 npm run test
 ```
