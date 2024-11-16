@@ -9,6 +9,15 @@ defmodule TakeHomeWeb.Router do
     pipe_through :api
   end
 
+  scope "/", TakeHomeWeb do
+    pipe_through :api
+
+    post"/encrypt", CryptController, :encrypt
+    post"/decrypt", CryptController, :decrypt
+    post"/sign", CryptController, :sign
+    post"/verify", CryptController, :verify
+  end
+
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:take_home, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
