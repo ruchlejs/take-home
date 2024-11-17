@@ -26,10 +26,30 @@ defmodule TakeHomeWeb.CryptController do
   end
 
   def sign(conn,_params) do
-    json(conn,%{message: "sign"})
+    secretKey = "AAAA"
+    hmac = :crypto.mac(:hmac,:sha256,secretKey,Jason.encode!(conn.body_params)) |> Base.encode16(case: :lower)
+    json(conn,hmac)
   end
 
   def verify(conn,_params) do
-    json(conn,%{message: "verify"})
+    body = conn.body_params
+    if Map.has_key?(body,"signature") && Map.has_key?(body,"data") do
+      providedSign = body["signature"]
+      # IO.inspect(providedSign)
+
+      secretKey = "AAAA"
+      hmac = :crypto.mac(:hmac,:sha256,secretKey,Jason.encode!(body["data"])) |> Base.encode16(case: :lower)
+
+      if hmac === providedSign do
+
+        json(conn,%{message: "same"})
+      else
+        json(conn,%{message: "different #{hmac}"})
+      end
+
+    else
+      json(conn,%{message: "You need to provide the signature and the data"})
+    end
+
   end
 end
