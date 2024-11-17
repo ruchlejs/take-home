@@ -12,5 +12,9 @@ defmodule TakeHome.Crypto do
     end
   end
 
+  def hmacSign(value, key) do
+    :crypto.mac(:hmac,:sha256,key,Jason.encode!(value)) |> Base.encode16(case: :lower)
+  end
+
 
 end

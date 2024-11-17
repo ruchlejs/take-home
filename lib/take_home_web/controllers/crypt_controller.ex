@@ -27,7 +27,7 @@ defmodule TakeHomeWeb.CryptController do
 
   def sign(conn,_params) do
     secretKey = "AAAA"
-    hmac = :crypto.mac(:hmac,:sha256,secretKey,Jason.encode!(conn.body_params)) |> Base.encode16(case: :lower)
+    hmac = Crypto.hmacSign(conn.body_params,secretKey)
     json(conn,hmac)
   end
 
@@ -38,7 +38,7 @@ defmodule TakeHomeWeb.CryptController do
       # IO.inspect(providedSign)
 
       secretKey = "AAAA"
-      hmac = :crypto.mac(:hmac,:sha256,secretKey,Jason.encode!(body["data"])) |> Base.encode16(case: :lower)
+      hmac = Crypto.hmacSign(body["data"],secretKey)
 
       if hmac === providedSign do
 
