@@ -13,7 +13,7 @@ defmodule TakeHomeWeb.CryptController do
         {key,Crypto.encrypt(Jason.encode!(value))}
       end
     end)
-    json(conn,encode)
+    conn|>put_status(200)|>json(encode)
   end
 
   def decrypt(conn,_params) do
@@ -22,13 +22,13 @@ defmodule TakeHomeWeb.CryptController do
     end)
     IO.puts("sorti decode")
     IO.inspect(decode)
-    json(conn,decode)
+    conn|>put_status(200)|>json(decode)
   end
 
   def sign(conn,_params) do
     secretKey = "AAAA"
     hmac = Crypto.hmacSign(conn.body_params,secretKey)
-    json(conn,hmac)
+    conn|>put_status(200)|>json(hmac)
   end
 
   def verify(conn,_params) do
@@ -42,13 +42,15 @@ defmodule TakeHomeWeb.CryptController do
 
       if hmac === providedSign do
 
-        json(conn,%{message: "same"})
+        IO.puts("test")
+        # conn|>put_status(204)|> send_resp("", "")
+        send_resp(conn,204,"")
       else
-        json(conn,%{message: "different #{hmac}"})
+        conn|>put_status(400)|>json(%{message: "different #{hmac}"})
       end
 
     else
-      json(conn,%{message: "You need to provide the signature and the data"})
+      conn|>put_status(400)|>json(%{message: "You need to provide the signature and the data"})
     end
 
   end
