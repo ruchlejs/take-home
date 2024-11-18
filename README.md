@@ -1,3 +1,5 @@
+[Solution](#Solution)
+
 # Riot Takehome Task Specification
 
 Your task is to implement a REST API which:
@@ -50,7 +52,11 @@ Your task is to implement a REST API which:
 
 Send me the project, your GitHub repository by email louis@tryriot.com.
 
-# TakeHome phoenix
+# Solution
+
+This problem has been addressed in Elixir. I created a backend with the framework phoenix to manage the different endpoints.
+
+## Execution 
 
 To start your Phoenix server:
 
@@ -59,12 +65,10 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Tests
 
-## Learn more
+Some tests have been included to verify the proper behavior of the program. You can run them with the following command:
 
-- Official website: https://www.phoenixframework.org/
-- Guides: https://hexdocs.pm/phoenix/overview.html
-- Docs: https://hexdocs.pm/phoenix
-- Forum: https://elixirforum.com/c/phoenix-forum
-- Source: https://github.com/phoenixframework/phoenix
+```
+mix test
+```
