@@ -46,7 +46,7 @@ defmodule TakeHomeWeb.CryptController do
         # conn|>put_status(204)|> send_resp("", "")
         send_resp(conn,204,"")
       else
-        conn|>put_status(400)|>json(%{message: "different #{hmac}"})
+        conn|>put_status(400)|>json(%{message: "Invalid signature"})
       end
 
     else
