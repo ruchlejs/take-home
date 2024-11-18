@@ -16,7 +16,12 @@ defmodule TakeHomeWeb.CryptController do
 
   def decrypt(conn,_params) do
     decode = Map.new(conn.body_params, fn({key,value}) ->
-      {key,Crypto.decrypt(value)}
+      if is_binary(value) do
+        {key,Crypto.decrypt(value)}
+      else
+        conn|>put_status(400)|>json(%{message: "JSON can't be decript"})
+      end
+
     end)
     conn|>put_status(200)|>json(decode)
   end
@@ -47,6 +52,17 @@ defmodule TakeHomeWeb.CryptController do
     else
       conn|>put_status(400)|>json(%{message: "You need to provide the signature and the data"})
     end
+
+    # Abort because complicated to dissociated the different case when there is a problem
+    #
+    # with %{"signature" =>providedSign, "data" =>data} <- body,
+    #   secretKey = "AAAA",
+    #   hmac = Crypto.hmacSign(body["data"],secretKey),
+    #   true <- hmac === providedSign do
+    #     send_resp(conn,204,"")
+    # else
+    #   conn|>put_status(400)|>json(%{message: "You need to provide the signature and the data"})
+    # end
 
   end
 end
