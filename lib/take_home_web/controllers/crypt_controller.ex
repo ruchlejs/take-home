@@ -6,10 +6,8 @@ defmodule TakeHomeWeb.CryptController do
   def encrypt(conn, _params) do
     encode = Map.new(conn.body_params, fn({key, value}) ->
       if is_binary(value) do
-        IO.inspect(value)
         {key,Crypto.encrypt(value)}
       else
-        IO.inspect(value)
         {key,Crypto.encrypt(Jason.encode!(value))}
       end
     end)
@@ -20,8 +18,6 @@ defmodule TakeHomeWeb.CryptController do
     decode = Map.new(conn.body_params, fn({key,value}) ->
       {key,Crypto.decrypt(value)}
     end)
-    IO.puts("sorti decode")
-    IO.inspect(decode)
     conn|>put_status(200)|>json(decode)
   end
 
@@ -35,7 +31,6 @@ defmodule TakeHomeWeb.CryptController do
     body = conn.body_params
     if Map.has_key?(body,"signature") && Map.has_key?(body,"data") do
       providedSign = body["signature"]
-      # IO.inspect(providedSign)
 
       secretKey = "AAAA"
       hmac = Crypto.hmacSign(body["data"],secretKey)
