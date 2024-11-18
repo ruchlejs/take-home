@@ -35,6 +35,31 @@ defmodule CryptControllerTest do
     end
   end
 
+
+  describe "hmacSign/2" do
+    test "returns different results for different keys" do
+      test_key2 = "testKey2"
+
+      test_payload = %{"test" => "test"}
+
+      first_sign = Crypto.hmacSign(test_payload, @secret_key)
+      second_sign = Crypto.hmacSign(test_payload, test_key2)
+
+      refute first_sign == second_sign
+    end
+
+    test "returns the same result for the same payload and key" do
+
+      test_payload = %{"test" => "test"}
+
+      first_sign = Crypto.hmacSign(test_payload, @secret_key)
+      second_sign = Crypto.hmacSign(test_payload, @secret_key)
+
+      assert first_sign == second_sign
+    end
+  end
+
+
   describe "POST /sign" do
     test "valid sign" ,%{conn: conn} do
       payload = %{
